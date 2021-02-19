@@ -4,9 +4,9 @@ include_once 'PHP/conn.php';
 include 'PHP/Student.php';
 
 
-$StudentId = $_REQUEST['student'];
+$studentId = $_REQUEST['student'];
 
-$student = new Student($id, $conn);
+$student = new Student($studentId, $conn);
 $array = $student->getStudentData();
 
 

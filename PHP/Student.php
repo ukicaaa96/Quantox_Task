@@ -46,7 +46,6 @@ class Student
             array_push($gradesArray, $row[0]);
         }
         return array_values($gradesArray);
-
     }
 
     /**
@@ -111,11 +110,10 @@ class Student
                 'grades' => $array
             ];
         }
-
     }
 
     /**
-     * This function return average grade and result if student Pass or not
+     * This function return grades, average grade and result if student Pass or not
      * @param $school_board
      * @return array
      */
@@ -139,12 +137,12 @@ class Student
 
         $xml = new SimpleXMLElement('<student_info/>');
 
-        $array1 = $xml->addChild('student');
-        $array1->addChild("id", $array['id']);
-        $array1->addChild("name", $array['name']);
-        $array1->addChild("list_of_grades", implode(',',$array['grades']));
-        $array1->addChild("average", $array['average']);
-        $array1->addChild('Result', $array['result']);
+        $myXml = $xml->addChild('student');
+        $myXml->addChild("id", $array['id']);
+        $myXml->addChild("name", $array['name']);
+        $myXml->addChild("list_of_grades", implode(',',$array['grades']));
+        $myXml->addChild("average", $array['average']);
+        $myXml->addChild('Result', $array['result']);
 
         $fileName = $array['id'].'-Student_XML.xml';
         $xml->asXML($fileName);
@@ -166,7 +164,8 @@ class Student
     /**
      *This is a function that returns all the necessary student data and our score
      */
-    function getStudentData(){
+    function getStudentData()
+    {
         $sql = "SELECT * FROM student where student_id = $this->studentId ;";
         $data = mysqli_query($this->conn , $sql);
         $data = $data->fetch_assoc();
