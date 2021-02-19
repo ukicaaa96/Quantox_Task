@@ -105,7 +105,7 @@ class Student
             ];
 
         } else {
-            return ['result' => "Pass",
+            return ['result' => "Fail",
                 'average'=> $average,
                 'grades' => $array
             ];
