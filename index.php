@@ -2,6 +2,8 @@
 
 include_once 'PHP/conn.php';
 
+
+
 function getBoardName($boardId, $conn){
     $sql = "SELECT board_name FROM school_board WHERE board_id = $boardId";
     $data = mysqli_query($conn , $sql);
@@ -109,18 +111,51 @@ function getStudentData($conn, $request){
         'result' => $result
     );
 
-    return $studentData;
+    if ($school_board == "CSM"){
+        $json = toJSON($studentData);
+        $myfile = fopen("Student_JSON.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, $json);
+        fclose($myfile);
+        echo "File saved as Student_JSON.txt";
+
+    }
+    elseif($school_board == "CSMB"){
+        toXML($studentData);
+        echo "File saved as Student_XML.xml";
+    }
 
 }
 
-echo json_encode(getStudentData($conn, 1), JSON_FORCE_OBJECT);
-echo '<br>';
-echo json_encode(getStudentData($conn, 2), JSON_FORCE_OBJECT);
-echo '<br>';
-echo json_encode(getStudentData($conn, 3), JSON_FORCE_OBJECT);
-echo '<br>';
-echo json_encode(getStudentData($conn, 4), JSON_FORCE_OBJECT);
-echo '<br>';
+function toXML($array){
+
+    $xml = new SimpleXMLElement('<student_info/>');
+
+        $array1 = $xml->addChild('student');
+        $array1->addChild("id", $array['id']);
+        $array1->addChild("name", $array['name']);
+        $array1->addChild("list_of_grades", implode(',',$array['grades']));
+        $array1->addChild("average", $array['average']);
+        $array1->addChild('Result', $array['result']);
+
+        $xml->asXML('student_info.xml');
+
+}
+
+function toJSON($array){
+
+    $json = json_encode($array, JSON_FORCE_OBJECT);
+    return $json;
+
+}
+
+getStudentData($conn, 3);
+getStudentData($conn, 4);
+
+
+
+
+
+
 
 
 
