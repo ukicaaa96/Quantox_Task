@@ -90,23 +90,22 @@ class Student
         }
 
         if (count($array) >= 2) {
-            $min = min($array);
-            $array = array_diff($array, [$min]);
+            $highGrade = max($array);
         }
-        $sum = array_sum($array);
-        $countGrades = count($array);
+        else{
+            $highGrade = $array[0];
+        }
 
-        $average = $sum / $countGrades;
 
-        if ($average >= 8) {
+        if ($highGrade >= 8) {
             return ['result' => "Pass",
-                'average'=> $average,
+                'high_grade'=> $highGrade,
                 'grades' => $array
             ];
 
         } else {
             return ['result' => "Fail",
-                'average'=> $average,
+                'high_grade'=> $highGrade,
                 'grades' => $array
             ];
         }
@@ -141,7 +140,7 @@ class Student
         $myXml->addChild("id", $array['id']);
         $myXml->addChild("name", $array['name']);
         $myXml->addChild("list_of_grades", implode(',',$array['grades']));
-        $myXml->addChild("average", $array['average']);
+        $myXml->addChild("high_hrade", $array['high_grade']);
         $myXml->addChild('Result', $array['result']);
 
         $fileName = $array['id'].'-Student_XML.xml';
@@ -172,17 +171,32 @@ class Student
         $student_id = $data['student_id'];
         $student_name = $data['student_name'];
         $school_board = $this->getBoardName($data['board_id']);
-        $studentGrades = $this->Result($school_board)['grades'];
-        $result = $this->Result($school_board)['result'];
-        $averageGrade = $this->Result($school_board)['average'];
-        $studentData = array(
-            'id' => $student_id,
-            'name' => $student_name,
-            'grades' => $studentGrades,
-            'average' => $averageGrade,
-            'result' => $result
-        );
-
+        $result = $this->Result($school_board);
+        $studentGrades = $result['grades'];
+        if (array_key_exists('high_grade', $result)) 
+        {
+            $highGrade = $this->Result($school_board)['high_grade'];
+            $studentData = array(
+                'id' => $student_id,
+                'name' => $student_name,
+                'grades' => $studentGrades,
+                'high_grade' => $highGrade,
+                'result' => $result
+            );
+            
+        }
+        else{
+            $averageGrade = $this->Result($school_board)['average'];
+            $studentData = array(
+                'id' => $student_id,
+                'name' => $student_name,
+                'grades' => $studentGrades,
+                'average' => $averageGrade,
+                'result' => $result
+            );
+           
+        }
+        
         if ($school_board == "CSM")
         {
             $json = $this->toJSON($studentData);
